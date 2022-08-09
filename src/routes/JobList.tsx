@@ -1,10 +1,10 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Button } from "../components";
+import FiltersSection from "../components/Filters";
 import JobCard from "../components/JobCard";
 import { getJobs } from "../utils/http";
-import { Job } from "../utils/models";
+import { Filters, Job } from "../utils/models";
 
 const StyledJobList = styled.section`
   display: grid;
@@ -19,16 +19,36 @@ const StyledButtonContainer = styled.div`
 `;
 
 export default function JobList() {
+    const fullDataRef = useRef<Job[]>([]);
     const [jobs, setJobs] = useState<Job[]>([]);
 
     useEffect(() => {
         setTimeout(() => {
-            getJobs().then(jobs => setJobs(jobs.slice(0, 6)));
+            getJobs().then(jobs => {
+              fullDataRef.current = jobs;
+              setJobs(jobs);
+            });
         }, 1000);
     }, []);
 
+    const applyFilters = (e: any, filters: Filters) => {
+      e.preventDefault();
+      const filteredJobs = fullDataRef.current.filter(item => {
+        return ((!filters.fullTimeOnly) || (filters.fullTimeOnly && item.contract === "Full Time"))
+        && ((filters.location === '') || (filters.location.toLowerCase() === item.location.toLowerCase()))
+        && ((filters.textSearch === '') || item.description.toLowerCase().includes(filters.textSearch.toLowerCase()))
+      });
+      setJobs(filteredJobs);
+    }
+
+    const getUniqueLocations = () => {
+      const allLocations = fullDataRef.current.map(item => item.location);
+      return Array.from(new Set([...allLocations]));
+    }
+
     return (
       <>
+        <FiltersSection applyFilters={applyFilters} locations={getUniqueLocations()} />
         <StyledJobList>
           {jobs.map(job => <JobCard key={job.id} job={job} />)}
         </StyledJobList>

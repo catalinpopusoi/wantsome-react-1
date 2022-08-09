@@ -7,8 +7,8 @@ import axios from "axios";
  * - adding custom request headers needed for all requests
  */
 axios.interceptors.request.use(function (config) {
-    console.log(config);
-    console.log('Request sent');
+    // console.log(config);
+    // console.log('Request sent');
     return config;
   }, function (error) {
     // Do something with request error
@@ -22,8 +22,8 @@ axios.interceptors.request.use(function (config) {
  * - handling errors (401, 403, 500)
  */
 axios.interceptors.response.use(function (response) {
-    console.log(response);
-    console.log("Response received");
+    // console.log(response);
+    // console.log("Response received");
     return response;
   }, function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
