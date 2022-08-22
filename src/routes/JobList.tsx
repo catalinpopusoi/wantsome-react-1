@@ -18,6 +18,7 @@ const StyledButtonContainer = styled.div`
   text-align: center;
 `;
 
+
 export default function JobList() {
     const fullDataRef = useRef<Job[]>([]);
     const [jobs, setJobs] = useState<Job[]>([]);
@@ -33,10 +34,10 @@ export default function JobList() {
 
     const applyFilters = (e: any, filters: Filters) => {
       e.preventDefault();
-      const filteredJobs = fullDataRef.current.filter(item => {
-        return ((!filters.fullTimeOnly) || (filters.fullTimeOnly && item.contract === "Full Time"))
-        && ((filters.location === '') || (filters.location.toLowerCase() === item.location.toLowerCase()))
-        && ((filters.textSearch === '') || item.description.toLowerCase().includes(filters.textSearch.toLowerCase()))
+      const filteredJobs = fullDataRef.current.filter(job => {
+        return ((!filters.fullTimeOnly) || (filters.fullTimeOnly && job.contract === "Full Time"))
+        && ((filters.location.length === 0) || (filters.location.includes(job.location)))
+        && ((filters.textSearch === '') || job.description.toLowerCase().includes(filters.textSearch.toLowerCase()))
       });
       setJobs(filteredJobs);
     }

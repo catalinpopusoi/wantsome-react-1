@@ -1,9 +1,10 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 interface SelectProps {
     options: string[];
     placeholder: string;
+    emitSelectedValues: (values: string[]) => void;
 }
 
 const StyledSelect = styled.div`
@@ -51,20 +52,46 @@ const StyledSelect = styled.div`
             input {
                 margin: 0;
             }
+
+            input, label {
+                pointer-events: none;
+            }
         }
     }
 `;
 
-export default function Select({ options, placeholder }: SelectProps) {
+export default function Select({ options, placeholder, emitSelectedValues }: SelectProps) {
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
     const [searchText, setSearchText] = useState('');
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const searchRef = useRef<HTMLInputElement>(null);
+    const selectRef = useRef<HTMLInputElement>(null);
+    const sectionRef = useRef<HTMLElement>(null);
 
-    const openDropdown = () => {
+    const toggleDropdown = useCallback(() => {
+        emitSelectedValues(selectedValues);
         setIsDropdownVisible(!isDropdownVisible);
         setTimeout(() => searchRef.current?.focus(), 0);
-    }
+    }, [isDropdownVisible, selectedValues]);
+
+    const checkIfClickOutsideDropdown = useCallback((e: Event) => {
+        const isClickOnSelect = e.target === selectRef.current;
+        const isClickInsideSection = sectionRef.current?.contains(e.target as Node);
+
+        if (isClickOnSelect) return;
+
+        if (isDropdownVisible && !isClickInsideSection) {
+            toggleDropdown();
+        }
+    }, [isDropdownVisible, toggleDropdown]);
+
+    useEffect(() => {
+        document.body.addEventListener('click', checkIfClickOutsideDropdown);
+
+        return () => {
+            document.body.removeEventListener('click', checkIfClickOutsideDropdown);
+        }
+    }, [checkIfClickOutsideDropdown]);
 
     const handleOptionClick = (option: string) => {
         if (selectedValues.includes(option)) {
@@ -76,20 +103,18 @@ export default function Select({ options, placeholder }: SelectProps) {
 
     return (
         <StyledSelect>
-            <input type="text" placeholder={placeholder} readOnly value={selectedValues.join(', ')} onClick={openDropdown} />
+            <input ref={selectRef} type="text" placeholder={placeholder} readOnly value={selectedValues.join(', ')} onClick={toggleDropdown} />
             {
                 isDropdownVisible && (
-                    <section>
+                    <section ref={sectionRef}>
                         <input ref={searchRef} type="text" value={searchText} onChange={e => setSearchText(e.target.value)} />
                         <ul>
-                            {options.map(option => {
-                                return (
-                                    <li key={option} role="option" onClick={() => handleOptionClick(option)}>
-                                        <input id={option} type="checkbox" checked={selectedValues.includes(option)} />
-                                        <label htmlFor={option}>{option}</label>
-                                    </li>
-                                )
-                            })}
+                            {options.map(option => (
+                                <li key={option} role="option" onClick={() => handleOptionClick(option)}>
+                                    <input id={option} type="checkbox" checked={selectedValues.includes(option)} readOnly />
+                                    <label htmlFor={option}>{option}</label>
+                                </li>
+                            ))}
                         </ul>
                     </section>
                 )

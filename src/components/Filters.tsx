@@ -26,7 +26,7 @@ interface FiltersProps {
 export default function FiltersSection({ applyFilters, locations }: FiltersProps) {
     const [filters, setFilters] = useState<Filters>({
         textSearch: '',
-        location: '',
+        location: [],
         fullTimeOnly: false
     });
 
@@ -34,6 +34,13 @@ export default function FiltersSection({ applyFilters, locations }: FiltersProps
         setFilters((currentFilters) => ({
             ...currentFilters,
             [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
+        }));
+    }
+
+    const handleLocationValues = (locations: string[]) => {
+        setFilters(currentFilters => ({
+            ...currentFilters,
+            location: locations
         }));
     }
 
@@ -46,14 +53,7 @@ export default function FiltersSection({ applyFilters, locations }: FiltersProps
                 onChange={handleFilterChange}
                 name="textSearch"
             />
-            {/* <input
-                type="text"
-                placeholder="Filter by location..."
-                value={filters.location}
-                onChange={handleFilterChange}
-                name="location"
-            /> */}
-            <Select options={locations} placeholder="Filter by location..." />
+            <Select options={locations} placeholder="Filter by location..." emitSelectedValues={handleLocationValues} />
             <div>
                 <input
                     type="checkbox"

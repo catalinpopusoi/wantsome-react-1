@@ -22,6 +22,6 @@ export interface Job {
 
 export interface Filters {
     textSearch: string;
-    location: string;
+    location: string[];
     fullTimeOnly: boolean;
 }
