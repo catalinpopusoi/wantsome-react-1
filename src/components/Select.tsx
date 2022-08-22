@@ -142,7 +142,7 @@ export default function Select({ options, placeholder, emitSelectedValues }: Sel
                                         <label htmlFor={option}>{option}</label>
                                     </li>
                                 ))}
-                                {filteredOptions.length === 0 && <li>No countries match your search</li>}
+                                {filteredOptions.length === 0 && <li>No options match your search</li>}
                             </ul>
                         </section>
                     )
