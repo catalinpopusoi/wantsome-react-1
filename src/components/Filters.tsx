@@ -1,5 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { ReactComponent as LocationIcon } from './icon-location.svg';
+import { ReactComponent as SearchIcon } from './icon-search.svg';
 import Button from "./Button";
 import { Filters } from '../utils/models';
 import Select from "./Select";
@@ -14,24 +16,39 @@ const StyledFilters = styled.form`
   top: 0;
   z-index: 1;
 
-  > input[type="text"] {
-    border-radius: 6px 0 0 6px;
-    height: 80px;
-    flex: 4;
-    padding: 0 32px;
-    border: none;
-    border-right: 1px solid ${props => props.theme.colors.secondary[2]};
-    color: ${props => props.theme.colors.primary[2]};
-
-    &::placeholder {
-        color: ${props => props.theme.colors.primary[2]};
-    }
+  .form-field-with-icon {
+    display: flex;
+    align-items: center;
+    padding-left: 16px;
   }
 
-  > div:first-of-type {
+  .text-search {
+    flex: 4;
+    border-right: 1px solid ${props => props.theme.colors.secondary[2]};
+
+    > input[type="text"] {
+        border-radius: 6px 0 0 6px;
+        height: 80px;    
+        padding: 0 16px;
+        border: none;
+        flex: 1;
+        color: ${props => props.theme.colors.primary[2]};
+        background-color: ${props => props.theme.colors.secondary[0]};
+    
+        &::placeholder {
+            color: ${props => props.theme.colors.primary[2]};
+        }
+      }
+  }
+
+  .location-search {
     flex: 3;
     border: none;
     border-right: 1px solid ${props => props.theme.colors.secondary[2]};
+
+    > div {
+        flex: 1;
+    }
   }
 
   > div:last-of-type {
@@ -77,14 +94,20 @@ export default function FiltersSection({ applyFilters, locations }: FiltersProps
 
     return (
         <StyledFilters onSubmit={e => applyFilters(e, filters)}>
-            <input
-                type="text"
-                placeholder="Filter by title, companies, expertise..."
-                value={filters.textSearch}
-                onChange={handleFilterChange}
-                name="textSearch"
-            />
-            <Select options={locations} placeholder="Filter by location..." emitSelectedValues={handleLocationValues} />
+            <div className="form-field-with-icon text-search">
+                <SearchIcon />
+                <input
+                    type="text"
+                    placeholder="Filter by title, companies, expertise..."
+                    value={filters.textSearch}
+                    onChange={handleFilterChange}
+                    name="textSearch"
+                />
+            </div>
+            <div className="form-field-with-icon location-search">
+                <LocationIcon />
+                <Select options={locations} placeholder="Filter by location..." emitSelectedValues={handleLocationValues} />
+            </div>
             <div>
                 <input
                     type="checkbox"

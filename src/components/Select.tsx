@@ -18,8 +18,13 @@ const StyledSelect = styled.div`
     > input {
         height: 80px;
         border: none;
-        padding: 0 32px;
+        padding: 0 16px;
+        background-color: ${props => props.theme.colors.secondary[0]};
         color: ${props => props.theme.colors.primary[2]};
+
+        &::placeholder {
+            color: ${props => props.theme.colors.primary[2]};
+        }
     }
 
     section {
@@ -27,9 +32,25 @@ const StyledSelect = styled.div`
         top: 85px;
         border: 1px solid black;
         padding: 5px 5px 0;
-        background-color: white;
+        background-color: ${props => props.theme.colors.secondary[0]};
         width: 100%;
         z-index: 1;
+
+        > input {
+            background-color: ${props => props.theme.colors.secondary[0]};
+            color: ${props => props.theme.colors.primary[2]};
+            height: 40px;
+            border: none;
+            border-bottom: 1px solid ${props => props.theme.colors.primary[2]};
+
+            &:focus {
+                outline: 0;
+            }
+
+            &::placeholder {
+                color: ${props => props.theme.colors.primary[2]};
+            }
+        }
     }
 
     ul {
@@ -104,24 +125,29 @@ export default function Select({ options, placeholder, emitSelectedValues }: Sel
         }
     }
 
+    const filteredOptions = options.filter(option => option.toLowerCase().includes(searchText.toLowerCase()));
+
     return (
         <StyledSelect>
-            <input ref={selectRef} type="text" placeholder={placeholder} readOnly value={selectedValues.join(', ')} onClick={toggleDropdown} />
-            {
-                isDropdownVisible && (
-                    <section ref={sectionRef}>
-                        <input ref={searchRef} type="text" value={searchText} onChange={e => setSearchText(e.target.value)} />
-                        <ul>
-                            {options.filter(option => option.toLowerCase().includes(searchText.toLowerCase())).map(option => (
-                                <li key={option} role="option" onClick={() => handleOptionClick(option)}>
-                                    <input id={option} type="checkbox" checked={selectedValues.includes(option)} readOnly />
-                                    <label htmlFor={option}>{option}</label>
-                                </li>
-                            ))}
-                        </ul>
-                    </section>
-                )
-            }
+            <>
+                <input ref={selectRef} type="text" placeholder={placeholder} readOnly value={selectedValues.join(', ')} onClick={toggleDropdown} />
+                {
+                    isDropdownVisible && (
+                        <section ref={sectionRef}>
+                            <input ref={searchRef} type="text" value={searchText} onChange={e => setSearchText(e.target.value)} placeholder="Filter by country..." />
+                            <ul>
+                                {filteredOptions.map(option => (
+                                    <li key={option} role="option" onClick={() => handleOptionClick(option)}>
+                                        <input id={option} type="checkbox" checked={selectedValues.includes(option)} readOnly />
+                                        <label htmlFor={option}>{option}</label>
+                                    </li>
+                                ))}
+                                {filteredOptions.length === 0 && <li>No countries match your search</li>}
+                            </ul>
+                        </section>
+                    )
+                }
+            </>
         </StyledSelect>
     );
 }
