@@ -6,15 +6,46 @@ import Select from "./Select";
 
 const StyledFilters = styled.form`
   background-color: ${props => props.theme.colors.secondary[0]};
+  border-radius: 6px;
   display: flex;
   align-items: center;
-
-  > * {
-    flex: 1;
-  }
+  padding-right: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 
   > input[type="text"] {
+    border-radius: 6px 0 0 6px;
     height: 80px;
+    flex: 4;
+    padding: 0 32px;
+    border: none;
+    border-right: 1px solid ${props => props.theme.colors.secondary[2]};
+    color: ${props => props.theme.colors.primary[2]};
+
+    &::placeholder {
+        color: ${props => props.theme.colors.primary[2]};
+    }
+  }
+
+  > div:first-of-type {
+    flex: 3;
+    border: none;
+    border-right: 1px solid ${props => props.theme.colors.secondary[2]};
+  }
+
+  > div:last-of-type {
+    flex: 2;
+    padding: 0 32px;
+
+    label {
+        font-weight: 700;
+        margin-left: 8px;
+    }
+  }
+
+  > button {
+    flex: 1;
   }
 `;
 

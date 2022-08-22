@@ -17,6 +17,9 @@ const StyledSelect = styled.div`
 
     > input {
         height: 80px;
+        border: none;
+        padding: 0 32px;
+        color: ${props => props.theme.colors.primary[2]};
     }
 
     section {
@@ -109,7 +112,7 @@ export default function Select({ options, placeholder, emitSelectedValues }: Sel
                     <section ref={sectionRef}>
                         <input ref={searchRef} type="text" value={searchText} onChange={e => setSearchText(e.target.value)} />
                         <ul>
-                            {options.map(option => (
+                            {options.filter(option => option.toLowerCase().includes(searchText.toLowerCase())).map(option => (
                                 <li key={option} role="option" onClick={() => handleOptionClick(option)}>
                                     <input id={option} type="checkbox" checked={selectedValues.includes(option)} readOnly />
                                     <label htmlFor={option}>{option}</label>
