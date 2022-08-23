@@ -18,19 +18,32 @@ const StyledButtonContainer = styled.div`
   text-align: center;
 `;
 
+const MAX_ITEMS_PER_CHUNK = 6;
 
 export default function JobList() {
     const fullDataRef = useRef<Job[]>([]);
+    const [chunkStart, setChunkStart] = useState(0);
     const [jobs, setJobs] = useState<Job[]>([]);
 
     useEffect(() => {
         setTimeout(() => {
             getJobs().then(jobs => {
               fullDataRef.current = jobs;
-              setJobs(jobs);
+              setJobs(jobs.slice(chunkStart, MAX_ITEMS_PER_CHUNK));
+              setChunkStart(MAX_ITEMS_PER_CHUNK);
             });
         }, 1000);
+
+        return () => {
+          setJobs([]);
+          setChunkStart(0);
+        }
     }, []);
+
+    const loadMore = () => {
+      setJobs(currentJobs => [...currentJobs, ...fullDataRef.current.slice(chunkStart, chunkStart + MAX_ITEMS_PER_CHUNK)]);
+      setChunkStart(chunkStart => chunkStart + MAX_ITEMS_PER_CHUNK);
+    }
 
     const applyFilters = (e: any, filters: Filters) => {
       e.preventDefault();
@@ -53,9 +66,14 @@ export default function JobList() {
         <StyledJobList>
           {jobs.map(job => <JobCard key={job.id} job={job} />)}
         </StyledJobList>
-        <StyledButtonContainer>
-          <Button>Load More</Button>
-        </StyledButtonContainer>
+        {
+          // jobs.length !== fullDataRef.current.length && (
+          chunkStart < fullDataRef.current.length && (
+            <StyledButtonContainer>
+              <Button onClick={loadMore}>Load More</Button>
+            </StyledButtonContainer>
+          )
+        }
       </>
     )
 }
