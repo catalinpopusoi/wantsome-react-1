@@ -45,6 +45,9 @@ const StyledFilters = styled.form`
   > div:last-of-type {
     flex: 2;
     padding: 0 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 
     label {
         font-weight: 700;
