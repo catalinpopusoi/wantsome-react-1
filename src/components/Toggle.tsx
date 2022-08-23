@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Input from "./Input";
 
 interface ToggleProps {
     id: string;
@@ -48,7 +49,7 @@ export default function Toggle({ id, checked = false, handleCheck }: ToggleProps
 
     return (
         <StyledToggle>
-            <input type="checkbox" id={id} onChange={handleChange} checked={checked} />
+            <Input type="checkbox" id={id} onChange={handleChange} checked={checked} />
             <label htmlFor={id}></label>
         </StyledToggle>
     )

@@ -5,6 +5,7 @@ import { ReactComponent as SearchIcon } from './icon-search.svg';
 import Button from "./Button";
 import { Filters } from '../utils/models';
 import Select from "./Select";
+import Input from './Input';
 
 const StyledFilters = styled.form`
   background-color: ${props => props.theme.colors.secondary[0]};
@@ -27,18 +28,8 @@ const StyledFilters = styled.form`
     border-right: 1px solid ${props => props.theme.colors.secondary[2]};
 
     > input[type="text"] {
-        border-radius: 6px 0 0 6px;
-        height: 80px;    
-        padding: 0 16px;
-        border: none;
-        flex: 1;
-        color: ${props => props.theme.colors.primary[2]};
-        background-color: ${props => props.theme.colors.secondary[0]};
-    
-        &::placeholder {
-            color: ${props => props.theme.colors.primary[2]};
-        }
-      }
+        flex: 1;    
+    }
   }
 
   .location-search {
@@ -96,7 +87,7 @@ export default function FiltersSection({ applyFilters, locations }: FiltersProps
         <StyledFilters onSubmit={e => applyFilters(e, filters)}>
             <div className="form-field-with-icon text-search">
                 <SearchIcon />
-                <input
+                <Input
                     type="text"
                     placeholder="Filter by title, companies, expertise..."
                     value={filters.textSearch}
@@ -109,7 +100,7 @@ export default function FiltersSection({ applyFilters, locations }: FiltersProps
                 <Select options={locations} placeholder="Filter by location..." emitSelectedValues={handleLocationValues} />
             </div>
             <div>
-                <input
+                <Input
                     type="checkbox"
                     id="full-time-only"
                     checked={filters.fullTimeOnly}

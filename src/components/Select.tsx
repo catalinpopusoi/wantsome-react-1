@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import Input from "./Input";
 
 interface SelectProps {
     options: string[];
@@ -15,18 +16,6 @@ const StyledSelect = styled.div`
         width: 100%;
     }
 
-    > input {
-        height: 80px;
-        border: none;
-        padding: 0 16px;
-        background-color: ${props => props.theme.colors.secondary[0]};
-        color: ${props => props.theme.colors.primary[2]};
-
-        &::placeholder {
-            color: ${props => props.theme.colors.primary[2]};
-        }
-    }
-
     section {
         position: absolute;
         top: 85px;
@@ -35,22 +24,6 @@ const StyledSelect = styled.div`
         background-color: ${props => props.theme.colors.secondary[0]};
         width: 100%;
         z-index: 1;
-
-        > input {
-            background-color: ${props => props.theme.colors.secondary[0]};
-            color: ${props => props.theme.colors.primary[2]};
-            height: 40px;
-            border: none;
-            border-bottom: 1px solid ${props => props.theme.colors.primary[2]};
-
-            &:focus {
-                outline: 0;
-            }
-
-            &::placeholder {
-                color: ${props => props.theme.colors.primary[2]};
-            }
-        }
     }
 
     ul {
@@ -130,15 +103,15 @@ export default function Select({ options, placeholder, emitSelectedValues }: Sel
     return (
         <StyledSelect>
             <>
-                <input ref={selectRef} type="text" placeholder={placeholder} readOnly value={selectedValues.join(', ')} onClick={toggleDropdown} />
+                <Input ref={selectRef} type="text" placeholder={placeholder} readOnly value={selectedValues.join(', ')} onClick={toggleDropdown} />
                 {
                     isDropdownVisible && (
                         <section ref={sectionRef}>
-                            <input ref={searchRef} type="text" value={searchText} onChange={e => setSearchText(e.target.value)} placeholder="Filter by country..." />
+                            <Input variation="small" ref={searchRef} type="text" value={searchText} onChange={e => setSearchText(e.target.value)} placeholder="Filter by country..." />
                             <ul>
                                 {filteredOptions.map(option => (
                                     <li key={option} role="option" onClick={() => handleOptionClick(option)}>
-                                        <input id={option} type="checkbox" checked={selectedValues.includes(option)} readOnly />
+                                        <Input id={option} type="checkbox" checked={selectedValues.includes(option)} readOnly />
                                         <label htmlFor={option}>{option}</label>
                                     </li>
                                 ))}
