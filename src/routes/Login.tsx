@@ -10,7 +10,7 @@ const StyledLogin = styled.form`
 
 `;
 
-export default function Login(props: any) {
+export default function Login() {
     const { setUsername } = useContext(UserContext);
     const [userInfo, setUserInfo] = useState<UserInfo>({ email: '', password: '' });
     const navigate = useNavigate();

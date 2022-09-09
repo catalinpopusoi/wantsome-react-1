@@ -1,12 +1,15 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, lazy, Suspense, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import Container from './layout/Container';
 import Header from './layout/Header';
-import { JobDetails, JobList, Login, MyJobs } from './routes';
+import { JobDetails, JobList } from './routes';
 import GlobalStyle from './utils/global-style';
 import { checkAuth } from './utils/http';
 import { whiteTheme, darkTheme } from './utils/theme';
+
+const MyJobs = lazy(() => import('./routes/MyJobs'));
+const Login = lazy(() => import('./routes/Login'));
 
 interface PrivateRouteProps {
   children: React.ReactElement;
@@ -57,10 +60,20 @@ function App() {
           <Routes>
             <Route path="/" element={<JobList />} />
             <Route path="/job/:jobId" element={<JobDetails />} />
-            <Route path="/login" element={<Login />} />
+            <Route
+              path="/login"
+              element={
+                (
+                  <Suspense fallback={<p style={{ color: 'red', fontSize: 48 }}>Loading...</p>}>
+                    <Login />
+                  </Suspense>
+                )
+              } />
             <Route path="/my-jobs" element={
               <PrivateRoute>
-                <MyJobs />
+                <Suspense>
+                  <MyJobs />
+                </Suspense>
               </PrivateRoute>
             } />
             <Route path="**" element={<JobList />} />
