@@ -81,7 +81,7 @@ export default function JobDetails() {
 
     useEffect(() => {
         getJobById(+jobId).then(job => setJob(job));
-    }, []);
+    }, [jobId]);
 
     if (!job) return null;
     

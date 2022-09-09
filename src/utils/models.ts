@@ -25,3 +25,8 @@ export interface Filters {
     location: string[];
     fullTimeOnly: boolean;
 }
+
+export interface UserInfo {
+    email: string;
+    password: string;
+}
